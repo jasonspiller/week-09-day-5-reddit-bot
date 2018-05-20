@@ -74,7 +74,7 @@ class RedditBot():
                 match_title = re.findall(key, submission.title)
                 match_body = re.findall(key, submission.selftext)
 
-                if match_title or match_body:
+                if match_body or match_title:
                     print(key + ' found in submission ID: ' + submission.id)
 
                     if not os.path.exists(self.path):
