@@ -28,23 +28,29 @@ CHARACTERS = {
     'Trap Jaw':     'http://www.he-man.org/encyclopedia/viewobject.php?cat=3&objectid=285'
 }
 
+SUBS = [
+    'ActionFigures',
+    'transformers',
+    'StarWars',
+    'gijoe',
+    'MastersOfTheUniverse'
+]
+
+# file that keeps track of the submission the bot has posted in
+PATH = '/Users/jasonspiller/Dropbox/projects/WDI/homework/week-09/day-5-reddit-bot/commented.txt'
+
 
 class RedditBot():
     """reddit bot."""
 
-    def __init__(self, characters):
+    def __init__(self, characters, subs, path):
         """Initialize the bot."""
         print("Initializing Bot")
 
-        # file that keeps track of where the bot has posted
-        self.path = '/Users/jasonspiller/Dropbox/projects/WDI/homework/week-09/day-5-reddit \
-                -bot/commented.txt'
-
-        # comment content
-        self.header = 'This is one of my creator\'s favorite characters.'
-        self.body = 'I have let him you you guys are talking about [BLANK]. If you would \
-        like to know more about [BLANK], please see the lnk below. \n\n [LINK]'
-        self.footer = '\n\n| Posted by FocusCharacterBot | Bot created by u/slickmcfav |'
+        # access to settings (character, subs and path)
+        self.characters = characters
+        self.subs = subs
+        self.path = path
 
         self.main()
 
@@ -61,31 +67,42 @@ class RedditBot():
         """Run the bot."""
         print('Getting 100 posts. \n')
 
-        for comment in reddit.subreddit('test').comments(limit=100):
+        # this will output subs when ready for production: '+'.join(self.subs)
+        for submission in reddit.subreddit('test').new(limit=100):
 
-            match = re.findall('IG-88', comment.body)
-            if match:
-                print('Link found in comment with comment ID: ' + comment.id)
-                str_matched = match[0]
-                print('Character: ' + str_matched)
+            for key, value in self.characters.items():
 
-                if not os.path.exists(self.path):
-                    open(self.path, 'w').close()
-                file_obj_r = open(self.path, 'r')
+                match = re.findall(key, submission.selftext)
 
-                if comment.id not in file_obj_r.read().splitlines():
-                    print('Link is unique. Posting comment. \n')
-                    comment.reply(self.header + self.body + self.footer)
+                if match:
+                    print(key + ' found in submission ID: ' + submission.id)
 
-                    file_obj_r.close()
+                    if not os.path.exists(self.path):
+                        open(self.path, 'w').close()
 
-                    file_obj_w = open(self.path, 'a+')
-                    file_obj_w.write(comment.id + '\n')
-                    file_obj_w.close()
-                else:
-                    print('Already replied to comment. No reply needed. \n')
+                    file_obj_r = open(self.path, 'r')
 
-                time.sleep(10)
+                    if submission.id not in file_obj_r.read().splitlines():
+                        print('Link is unique. Creating and posting comment. \n')
+
+                        # comment content
+                        header = 'This is one of my creator\'s favorite characters. \n\n'
+                        body = 'I have let him you you guys are talking about ' + key + '. If you would \
+                        like to know more about ' + key + ', please see the lnk below. \n\n \
+                        [' + value + '](' + value + ') \n\n'
+                        footer = '| Posted by FocusCharacterBot | Bot created by u/slickmcfav |'
+
+                        submission.reply(header + body + footer)
+
+                        file_obj_r.close()
+
+                        file_obj_w = open(self.path, 'a+')
+                        file_obj_w.write(submission.id + '\n')
+                        file_obj_w.close()
+                    else:
+                        print('Already replied to submission. No reply needed. \n')
+
+                    time.sleep(10)
 
         print('Waiting 60 seconds. \n')
         time.sleep(60)
@@ -97,4 +114,4 @@ class RedditBot():
             self.run_bot(reddit)
 
 
-bot = RedditBot(CHARACTERS)
+bot = RedditBot(CHARACTERS, SUBS, PATH)

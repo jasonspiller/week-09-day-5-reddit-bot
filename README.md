@@ -21,3 +21,4 @@ Resources
 - **Repository** - https://github.com/jasonspiller/week-09-day-5-reddit-bot
 - **Bottiquette** - https://www.reddit.com/wiki/bottiquette
 - **My Apps** - https://www.reddit.com/prefs/apps/
+- **Format Submission to JSON** - https://www.reddit.com/r/test/comments/8kq411/test/praw_request_use_timestamps_in_submission_query/.json?utm_source=reddit&utm_medium=usertext&utm_name=redditdev&utm_content=t1_carqwpw
