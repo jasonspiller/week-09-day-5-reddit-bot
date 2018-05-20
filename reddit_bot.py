@@ -83,7 +83,7 @@ class RedditBot():
                     file_obj_r = open(self.path, 'r')
 
                     if submission.id not in file_obj_r.read().splitlines():
-                        print('Link is unique. Posting comment.\n')
+                        print('Link is unique. Posting comment.')
 
                         # comment content
                         comment = (
@@ -98,7 +98,7 @@ class RedditBot():
                             submission.title, submission.url
                         )
                         reddit.redditor('slickmcfav').message(subject, content)
-                        print('New post! PM Sent.')
+                        print('New post! PM Sent. \n')
 
                         file_obj_r.close()
 
