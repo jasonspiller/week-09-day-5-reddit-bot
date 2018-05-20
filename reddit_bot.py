@@ -34,7 +34,6 @@ SUBS = [
     'StarWars',
     'gijoe',
     'MastersOfTheUniverse',
-    'test'
 ]
 
 # file that keeps track of the submission the bot has posted in
@@ -66,15 +65,16 @@ class RedditBot():
 
     def run_bot(self, reddit):
         """Run the bot."""
-        print('Getting 100 posts. \n')
+        print('Getting 20 posts. \n')
 
-        for submission in reddit.subreddit('+'.join(self.subs)).new(limit=100):
+        for submission in reddit.subreddit('+'.join(self.subs)).new(limit=20):
 
             for key, value in self.characters.items():
 
-                match = re.findall(key, submission.selftext)
+                match_title = re.findall(key, submission.title)
+                match_body = re.findall(key, submission.selftext)
 
-                if match:
+                if match_title or match_body:
                     print(key + ' found in submission ID: ' + submission.id)
 
                     if not os.path.exists(self.path):
@@ -85,33 +85,38 @@ class RedditBot():
                     if submission.id not in file_obj_r.read().splitlines():
                         print('Link is unique. Posting comment.')
 
-                        # comment content
-                        comment = (
-                            'This is one of my creator\'s favorite characters. \n\n I have let him you guys are talking about **{}**. If you would like to know more about **{}**, please see the link below. \n\n [{}]({}) \n\n | Posted by FocusCharacterBot | Bot created by u/slickmcfav |'
-                        ).format(key, key, value, value)
+                        try:
+                            # comment content
+                            comment = (
+                                'This is one of my creator\'s favorite characters. \n\n I have let him know you guys are talking about **{}**. If you would like to know more about **{}**, please see the link below. \n\n [{}]({}) \n\n | Posted by FocusCharacterBot | Bot created by u/slickmcfav |'
+                            ).format(key, key, value, value)
 
-                        submission.reply(comment)
+                            submission.reply(comment)
 
-                        # try to send a PM
-                        subject = 'New post in ' + str(submission.subreddit)
-                        content = ('[{}]({})').format(
-                            submission.title, submission.url
-                        )
-                        reddit.redditor('slickmcfav').message(subject, content)
-                        print('New post! PM Sent. \n')
+                            # try to send a PM
+                            subject = 'New post in ' + str(submission.subreddit)
+                            content = ('[{}]({})').format(
+                                submission.title, submission.url
+                            )
+                            reddit.redditor('slickmcfav').message(subject, content)
+                            print('New post! PM Sent. \n')
 
-                        file_obj_r.close()
+                            file_obj_r.close()
 
-                        file_obj_w = open(self.path, 'a+')
-                        file_obj_w.write(submission.id + '\n')
-                        file_obj_w.close()
+                            file_obj_w = open(self.path, 'a+')
+                            file_obj_w.write(submission.id + '\n')
+                            file_obj_w.close()
+
+                        except praw.exceptions.APIException():
+                            print('Waiting 10 minutes. \n')
+                            time.sleep(600)
                     else:
                         print('Already replied. No reply needed. \n')
 
                     time.sleep(10)
 
-        print('Waiting 5 minutes. \n')
-        time.sleep(300)
+        print('Waiting 10 minutes. \n')
+        time.sleep(600)
 
     def main(self):
         """Launch the app."""
