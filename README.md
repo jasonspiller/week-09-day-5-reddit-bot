@@ -5,7 +5,7 @@ Simple reddit bot that detects mentions of my favorite characters and links to t
 
 MVP
 ===
-- Detect a
+- Detect a string equal to the names of 8 of my favorite characters stored in a dictionary. Posts a comment with a the link associated with the character. Able to run locally. 
 
 
 Stretch Goals
