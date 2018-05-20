@@ -5,7 +5,7 @@ Simple reddit bot that detects mentions of my favorite characters and links to t
 
 MVP
 ===
-- Detect a string equal to the names of 8 of my favorite characters stored in a dictionary. Posts a comment with a the link associated with the character. Able to run locally. 
+- Detect a string equal to the names of 8 of my favorite characters stored in a dictionary. Posts a comment with a the link associated with the character. Able to run locally.
 
 
 Stretch Goals
@@ -19,3 +19,5 @@ Resources
 - **Instructor's Bot** - https://gist.github.com/awhit012/089a54b09a53ee389827
 - **PRAW: The Python Reddit API Wrapper** - https://praw.readthedocs.io/en/latest
 - **Repository** - https://github.com/jasonspiller/week-09-day-5-reddit-bot
+- **Bottiquette** - https://www.reddit.com/wiki/bottiquette
+- **My Apps** - https://www.reddit.com/prefs/apps/
