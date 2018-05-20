@@ -3,7 +3,19 @@ Simple reddit bot that looks for mentions of my focus characters.
 
 When detected, it comments with a simple message and a link to
 their profile on a community resource.
+
+Created by: Jason Spiller
+License: MIT
 """
+
+from bs4 import BeautifulSoup
+from urllib.parse import urlparse
+
+import praw
+import time
+import re
+import requests
+import bs4
 
 
 """
@@ -21,18 +33,32 @@ dicCharacters = {
     'Trap Jaw':     'http://www.he-man.org/encyclopedia/viewobject.php?cat=3&objectid=285'
 }
 
+# file that keeps track of where the bot has posted
+path = '/Users/jasonspiller/Dropbox/projects/WDI/homework/week-09/day-5-reddit \
+        -bot/commented.txt'
+
+# comment content
+header = 'This is one of my creator\'s favorite characters.'
+body = 'I have let him you you guys are talking about [BLANK]. If you would like \
+to know more about [BLANK], please see the lnk below. \
+\n\n [LINK]'
+footer = '\n\n| Posted by FocusCharacterBot | Bot created by u/slickmcfav |'
+
 
 class RedditBot():
     """reddit bot."""
 
     def __init__(self, characters):
         """So you say you need a comment."""
-        self.dict_states = {}
-        self.stats = {'Correct': 0, 'Incorrect': 0}
-        self.shuffle_states(characters)
-        self.instructions()
-        self.play_game()
-        self.play_again()
+
+    def authenticate():
+        """Sign in to reddit."""
+        print('Signing In...\n')
+        reddit = praw.Reddit(
+            'FocusCharacterBot', user_agent='web:xkcd-explain-bot:v0.1 (by \
+            u/slickmcfav)')
+        print('Authenticated as {}\n'.format(reddit.user.me()))
+        return reddit
 
 
 bot = RedditBot(dicCharacters)
