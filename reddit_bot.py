@@ -20,10 +20,10 @@ Masters of the Universe and their corresponding profile links.
 CHARACTERS = {
     'Royal Guard':  'http://starwars.wikia.com/wiki/Emperor%27s_Royal_Guard',
     'IG-88':        'http://starwars.wikia.com/wiki/IG-88',
-    'Ultra Magnus': 'https://tfwiki.net/wiki/Soundwave_(G1)',
-    'Soundwave':    'https://tfwiki.net/wiki/Ultra_Magnus_(G1)',
-    'Mainframe':    'http://gijoe.wikia.com/wiki/Mainframe_(RAH)',
-    'Storm Shadow': 'http://gijoe.wikia.com/wiki/Storm_Shadow_(RAH)',
+    'Ultra Magnus': 'https://tfwiki.net/wiki/Ultra_Magnus_%28G1%29',
+    'Soundwave':    'https://tfwiki.net/wiki/Soundwave_%28G1%29',
+    'Mainframe':    'http://gijoe.wikia.com/wiki/Mainframe_%28RAH%29',
+    'Storm Shadow': 'http://gijoe.wikia.com/wiki/Storm_Shadow_%28RAH%29',
     'Hordak':       'http://www.he-man.org/encyclopedia/viewobject.php?cat=3&objectid=291',
     'Trap Jaw':     'http://www.he-man.org/encyclopedia/viewobject.php?cat=3&objectid=285'
 }
@@ -33,7 +33,8 @@ SUBS = [
     'transformers',
     'StarWars',
     'gijoe',
-    'MastersOfTheUniverse'
+    'MastersOfTheUniverse',
+    'test'
 ]
 
 # file that keeps track of the submission the bot has posted in
@@ -67,8 +68,7 @@ class RedditBot():
         """Run the bot."""
         print('Getting 100 posts. \n')
 
-        # this will output subs when ready for production: '+'.join(self.subs)
-        for submission in reddit.subreddit('test').new(limit=100):
+        for submission in reddit.subreddit('+'.join(self.subs)).new(limit=100):
 
             for key, value in self.characters.items():
 
@@ -83,16 +83,22 @@ class RedditBot():
                     file_obj_r = open(self.path, 'r')
 
                     if submission.id not in file_obj_r.read().splitlines():
-                        print('Link is unique. Creating and posting comment. \n')
+                        print('Link is unique. Posting comment.\n')
 
                         # comment content
-                        header = 'This is one of my creator\'s favorite characters. \n\n'
-                        body = 'I have let him you you guys are talking about ' + key + '. If you would \
-                        like to know more about ' + key + ', please see the lnk below. \n\n \
-                        [' + value + '](' + value + ') \n\n'
-                        footer = '| Posted by FocusCharacterBot | Bot created by u/slickmcfav |'
+                        comment = (
+                            'This is one of my creator\'s favorite characters. \n\n I have let him you guys are talking about **{}**. If you would like to know more about **{}**, please see the link below. \n\n [{}]({}) \n\n | Posted by FocusCharacterBot | Bot created by u/slickmcfav |'
+                        ).format(key, key, value, value)
 
-                        submission.reply(header + body + footer)
+                        submission.reply(comment)
+
+                        # try to send a PM
+                        subject = 'New post in ' + str(submission.subreddit)
+                        content = ('[{}]({})').format(
+                            submission.title, submission.url
+                        )
+                        reddit.redditor('slickmcfav').message(subject, content)
+                        print('New post! PM Sent.')
 
                         file_obj_r.close()
 
@@ -100,12 +106,12 @@ class RedditBot():
                         file_obj_w.write(submission.id + '\n')
                         file_obj_w.close()
                     else:
-                        print('Already replied to submission. No reply needed. \n')
+                        print('Already replied. No reply needed. \n')
 
                     time.sleep(10)
 
-        print('Waiting 60 seconds. \n')
-        time.sleep(60)
+        print('Waiting 5 minutes. \n')
+        time.sleep(300)
 
     def main(self):
         """Launch the app."""
